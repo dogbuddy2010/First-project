@@ -1,22 +1,25 @@
 import turtle
-
-# Create a screen object
-screen = turtle.Screen()
-screen.title("Turtle Graphics")
-screen.setup(width=800, height=600)
-
-# Create a turtle object
-t = turtle.Turtle()
-t.speed(1)
-
-# Draw a simple shape
-t.forward(100)
-t.right(90)
-t.forward(100)
-t.right(90)
-t.forward(100)
-t.right(90)
-t.forward(100)
-
-# Keep the window open
-turtle.done()
+answer = input("Would you like to run the Turtle mode? (yes/no): ")
+if answer.lower() == "yes":
+    # Create a screen object
+    screen = turtle.Screen()
+    screen.title("Turtle Graphics")
+    screen.setup(width=800, height=600)
+    
+    # Create a turtle object
+    t = turtle.Turtle()
+    t.speed(1)
+    
+    # Draw a simple shape
+    t.forward(100)
+    t.right(90)
+    t.forward(100)
+    t.right(90)
+    t.forward(100)
+    t.right(90)
+    t.forward(100)
+    
+    # Keep the window open
+    turtle.done()
+else:
+    print("Turtle mode not activated.")
