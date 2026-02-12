@@ -1,57 +1,65 @@
-answer = input("Would you like to run the Turtle mode? (yes/no): ")
+answer = input("Would you like to launch the Turtle mode? (yes/no): ")
 if answer.lower() == "yes":
-    import turtle
-    # Create a screen object
-    screen = turtle.Screen()
-    screen.title("Turtle Graphics")
-    screen.setup(width=800, height=600)
-    import turtle
-
     def get_input(prompt, default):
         val = input(f"{prompt} [{default}]: ").strip()
         return val if val else default
 
-    answer = input("Would you like to run the Turtle mode? (yes/no): ")
-    if answer.lower() == "yes":
-        # Create a screen object
-        screen = turtle.Screen()
-        screen.title("Turtle Graphics")
-        screen.setup(width=800, height=600)
+    launch = input("Would you like to launch the Turtle mode? (yes/no): ")
+    if launch.lower() == "yes":
+        customize = input("Would you like to customize the turtle? (yes/no): ")
 
-        # Ask the user for customization options
-        color = get_input("Choose turtle color", "blue")
-        shape = get_input("Choose turtle shape (classic, turtle, circle, square)", "turtle")
-        try:
-            speed = int(get_input("Choose speed (0-10)", "3"))
-            speed = max(0, min(10, speed))
-        except ValueError:
-            speed = 3
-        try:
-            pen_size = int(get_input("Pen size (1-10)", "2"))
-            pen_size = max(1, min(10, pen_size))
-        except ValueError:
-            pen_size = 2
-        try:
-            size = int(get_input("Square size in pixels", "100"))
-        except ValueError:
-            size = 100
+        # Defaults
+        color = "blue"
+        shape = "turtle"
+        speed = 3
+        pen_size = 2
+        size = 100
 
-        # Create a turtle object with chosen settings
-        t = turtle.Turtle()
-        t.color(color)
-        try:
-            t.shape(shape)
-        except Exception:
-            pass
-        t.pensize(pen_size)
-        t.speed(speed)
+        if customize.lower() == "yes":
+            color = get_input("Choose turtle color", color)
+            shape = get_input("Choose turtle shape (classic, turtle, circle, square)", shape)
+            try:
+                speed = int(get_input("Choose speed (0-10)", str(speed)))
+                speed = max(0, min(10, speed))
+            except ValueError:
+                speed = 3
+            try:
+                pen_size = int(get_input("Pen size (1-10)", str(pen_size)))
+                pen_size = max(1, min(10, pen_size))
+            except ValueError:
+                pen_size = 2
+            try:
+                size = int(get_input("Square size in pixels", str(size)))
+            except ValueError:
+                size = 100
 
-        # Draw a square of the requested size
-        for _ in range(4):
-            t.forward(size)
-            t.right(90)
+        start = input("Start turtle now? (yes/no): ")
+        if start.lower() == "yes":
+            import turtle
 
-        # Keep the window open
-        turtle.done()
+            # Create a screen object
+            screen = turtle.Screen()
+            screen.title("Turtle Graphics")
+            screen.setup(width=800, height=600)
+
+            # Create a turtle object with chosen settings
+            t = turtle.Turtle()
+            t.color(color)
+            try:
+                t.shape(shape)
+            except Exception:
+                pass
+            t.pensize(pen_size)
+            t.speed(speed)
+
+            # Draw a square of the requested size
+            for _ in range(4):
+                t.forward(size)
+                t.right(90)
+
+            # Keep the window open
+            turtle.done()
+        else:
+            print("Launch cancelled.")
     else:
-        print("Turtle mode not activated.")
+        print("Turtle mode not launched.")
