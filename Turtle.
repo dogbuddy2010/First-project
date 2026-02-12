@@ -1,6 +1,6 @@
-import turtle
 answer = input("Would you like to run the Turtle mode? (yes/no): ")
 if answer.lower() == "yes":
+    import turtle
     # Create a screen object
     screen = turtle.Screen()
     screen.title("Turtle Graphics")
