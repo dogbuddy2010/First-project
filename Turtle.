@@ -59,6 +59,7 @@ if answer.lower() == "yes":
 
             # Keep the window open
             turtle.done()
+            print("Turtle Program completed. Thank you for using Turtle. Goodbye!")
         else:
             print("Launch cancelled.")
     else:
