@@ -1,0 +1,120 @@
+name: Daily Bug Scan - Turtle Project
+
+on:
+  schedule:
+    # Run daily at 9:00 AM UTC
+    - cron: '0 9 * * *'
+  workflow_dispatch:  # Allow manual triggering
+  push:
+    branches:
+      - main
+      - master
+    paths:
+      - 'Turtle.'
+      - '**.py'
+
+jobs:
+  bug-scan:
+    runs-on: ubuntu-latest
+    name: Scan Turtle Project for Bugs
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+      
+      - name: Install linting tools
+        run: |
+          python -m pip install --upgrade pip
+          pip install pylint flake8 bandit
+      
+      - name: Run Flake8 (Style & Error Check)
+        id: flake8
+        continue-on-error: true
+        run: |
+          echo "## Flake8 Results" >> $GITHUB_STEP_SUMMARY
+          flake8 "Turtle." --count --show-source --statistics --extend-ignore=E501 || echo "Flake8 found issues"
+          echo "" >> $GITHUB_STEP_SUMMARY
+      
+      - name: Run Pylint (Code Quality Check)
+        id: pylint
+        continue-on-error: true
+        run: |
+          echo "## Pylint Results" >> $GITHUB_STEP_SUMMARY
+          pylint "Turtle." --fail-under=7.0 --disable=C0114,C0116 || echo "Pylint found issues"
+          echo "" >> $GITHUB_STEP_SUMMARY
+      
+      - name: Run Bandit (Security Check)
+        id: bandit
+        continue-on-error: true
+        run: |
+          echo "## Bandit Security Scan Results" >> $GITHUB_STEP_SUMMARY
+          bandit -r "Turtle." || echo "Bandit found security issues"
+          echo "" >> $GITHUB_STEP_SUMMARY
+      
+      - name: Python Syntax Check
+        run: |
+          echo "## Syntax Check Results" >> $GITHUB_STEP_SUMMARY
+          python -m py_compile "Turtle."
+          echo "✅ No syntax errors found" >> $GITHUB_STEP_SUMMARY
+      
+      - name: Create Issue if Bugs Found
+        if: steps.flake8.outcome == 'failure' || steps.pylint.outcome == 'failure' || steps.bandit.outcome == 'failure'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = '🐛 Daily Bug Scan - Issues Found in Turtle Project';
+            const body = `## Bug Scan Report - ${new Date().toLocaleDateString()}
+            
+            The daily automated bug scan has detected issues in the Turtle project.
+            
+            Please review the workflow run for details:
+            ${context.payload.repository.html_url}/actions/runs/${context.runId}
+            
+            ### Scan Results:
+            - Flake8 (Style/Errors): ${{ steps.flake8.outcome }}
+            - Pylint (Code Quality): ${{ steps.pylint.outcome }}
+            - Bandit (Security): ${{ steps.bandit.outcome }}
+            
+            ---
+            *This issue was automatically created by the daily bug scanning workflow.*`;
+            
+            // Check if there's already an open issue
+            const issues = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: ['bug', 'automated-scan']
+            });
+            
+            const existingIssue = issues.data.find(issue => 
+              issue.title.includes('Daily Bug Scan')
+            );
+            
+            if (existingIssue) {
+              // Update existing issue
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: existingIssue.number,
+                body: body
+              });
+            } else {
+              // Create new issue
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: title,
+                body: body,
+                labels: ['bug', 'automated-scan']
+              });
+            }
+      
+      - name: Report Success
+        if: steps.flake8.outcome == 'success' && steps.pylint.outcome == 'success' && steps.bandit.outcome == 'success'
+        run: |
+          echo "✅ All bug scans passed! No issues found." >> $GITHUB_STEP_SUMMARY
