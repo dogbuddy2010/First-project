@@ -3,9 +3,9 @@ def get_input(prompt, default):
     return val if val else default
 
 
-launch = input("Would you like to launch the Turtle mode? (yes/no): ")
+launch = input("Would you like to launch the Turtle mode? (yes/no): ").strip()
 if launch.lower() == "yes":
-    customize = input("Would you like to customize the turtle? (yes/no): ")
+    customize = input("Would you like to customize the turtle? (yes/no): ").strip()
 
     # Defaults
     color = "blue"
@@ -32,7 +32,7 @@ if launch.lower() == "yes":
         except ValueError:
             size = 100
 
-    start = input("Start turtle now? (yes/no): ")
+    start = input("Start turtle now? (yes/no): ").strip()
     if start.lower() == "yes":
         import turtle
 
@@ -43,7 +43,10 @@ if launch.lower() == "yes":
 
         # Create a turtle object with chosen settings
         t = turtle.Turtle()
-        t.color(color)
+        try:
+            t.color(color)
+        except Exception:
+            t.color("blue")  # Fallback to default color if invalid
         try:
             t.shape(shape)
         except Exception:
