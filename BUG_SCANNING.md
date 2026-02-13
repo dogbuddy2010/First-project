@@ -13,7 +13,7 @@ The bug scanning workflow runs automatically:
 
 ### What Gets Scanned
 
-The workflow performs multiple checks on the `Turtle.` file:
+The workflow performs multiple checks on the `turtle_app.py` file:
 
 1. **Flake8** - Checks for:
    - Python style violations (PEP 8)

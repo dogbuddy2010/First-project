@@ -10,7 +10,7 @@ on:
       - main
       - master
     paths:
-      - 'Turtle.'
+      - 'turtle_app.py'
       - '**.py'
 
 jobs:
@@ -40,7 +40,7 @@ jobs:
         continue-on-error: true
         run: |
           echo "## Flake8 Results" >> $GITHUB_STEP_SUMMARY
-          flake8 "Turtle." --count --show-source --statistics --extend-ignore=E501 || echo "Flake8 found issues"
+          flake8 "turtle_app.py" --count --show-source --statistics --extend-ignore=E501 || echo "Flake8 found issues"
           echo "" >> $GITHUB_STEP_SUMMARY
       
       - name: Run Pylint (Code Quality Check)
@@ -48,7 +48,7 @@ jobs:
         continue-on-error: true
         run: |
           echo "## Pylint Results" >> $GITHUB_STEP_SUMMARY
-          pylint "Turtle." --fail-under=7.0 --disable=C0114,C0116 || echo "Pylint found issues"
+          pylint "turtle_app.py" --fail-under=7.0 --disable=C0114,C0116 || echo "Pylint found issues"
           echo "" >> $GITHUB_STEP_SUMMARY
       
       - name: Run Bandit (Security Check)
@@ -56,13 +56,13 @@ jobs:
         continue-on-error: true
         run: |
           echo "## Bandit Security Scan Results" >> $GITHUB_STEP_SUMMARY
-          bandit -r "Turtle." || echo "Bandit found security issues"
+          bandit -r "turtle_app.py" || echo "Bandit found security issues"
           echo "" >> $GITHUB_STEP_SUMMARY
       
       - name: Python Syntax Check
         run: |
           echo "## Syntax Check Results" >> $GITHUB_STEP_SUMMARY
-          python -m py_compile "Turtle."
+          python -m py_compile "turtle_app.py"
           echo "✅ No syntax errors found" >> $GITHUB_STEP_SUMMARY
       
       - name: Create Issue if Bugs Found
