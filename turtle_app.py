@@ -46,6 +46,7 @@ if launch.lower() == "yes":
         try:
             t.color(color)
         except Exception:
+            print(f"Warning: '{color}' is not a valid color. Using default color 'blue'.")
             t.color("blue")  # Fallback to default color if invalid
         try:
             t.shape(shape)
