@@ -32,7 +32,7 @@ if launch.lower() == "yes":
             size = int(get_input("Shape size in pixels", str(size)))
         except ValueError:
             size = 100
-        draw_shape = get_input("Choose shape to draw (square, triangle, circle, pentagon, hexagon, star)", draw_shape)
+        draw_shape = get_input("Choose shape to draw (square, triangle, circle, pentagon, hexagon, star)", draw_shape).lower()
 
     start = input("Start turtle now? (yes/no): ").strip()
     if start.lower() == "yes":
@@ -58,7 +58,6 @@ if launch.lower() == "yes":
         t.speed(speed)
 
         # Draw the requested shape
-        draw_shape = draw_shape.lower()
         if draw_shape == "square":
             for _ in range(4):
                 t.forward(size)
@@ -68,7 +67,7 @@ if launch.lower() == "yes":
                 t.forward(size)
                 t.left(120)
         elif draw_shape == "circle":
-            t.circle(size)
+            t.circle(size / 2)
         elif draw_shape == "pentagon":
             for _ in range(5):
                 t.forward(size)
