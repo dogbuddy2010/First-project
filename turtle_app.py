@@ -13,6 +13,7 @@ if launch.lower() == "yes":
     speed = 3
     pen_size = 2
     size = 100
+    draw_shape = "square"
 
     if customize.lower() == "yes":
         color = get_input("Choose turtle color", color)
@@ -28,9 +29,10 @@ if launch.lower() == "yes":
         except ValueError:
             pen_size = 2
         try:
-            size = int(get_input("Square size in pixels", str(size)))
+            size = int(get_input("Shape size in pixels", str(size)))
         except ValueError:
             size = 100
+        draw_shape = get_input("Choose shape to draw (square, triangle, circle, pentagon, hexagon, star)", draw_shape)
 
     start = input("Start turtle now? (yes/no): ").strip()
     if start.lower() == "yes":
@@ -55,10 +57,35 @@ if launch.lower() == "yes":
         t.pensize(pen_size)
         t.speed(speed)
 
-        # Draw a square of the requested size
-        for _ in range(4):
-            t.forward(size)
-            t.right(90)
+        # Draw the requested shape
+        draw_shape = draw_shape.lower()
+        if draw_shape == "square":
+            for _ in range(4):
+                t.forward(size)
+                t.right(90)
+        elif draw_shape == "triangle":
+            for _ in range(3):
+                t.forward(size)
+                t.left(120)
+        elif draw_shape == "circle":
+            t.circle(size)
+        elif draw_shape == "pentagon":
+            for _ in range(5):
+                t.forward(size)
+                t.right(72)
+        elif draw_shape == "hexagon":
+            for _ in range(6):
+                t.forward(size)
+                t.right(60)
+        elif draw_shape == "star":
+            for _ in range(5):
+                t.forward(size)
+                t.right(144)
+        else:
+            print(f"Warning: '{draw_shape}' is not a recognized shape. Drawing a square instead.")
+            for _ in range(4):
+                t.forward(size)
+                t.right(90)
 
         # Keep the window open
         turtle.done()
