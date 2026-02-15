@@ -1,96 +1,147 @@
-def get_input(prompt, default):
+import turtle
+
+
+def get_user_input(prompt, default):
+    """Helper function to get user input with default value"""
     val = input(f"{prompt} [{default}]: ").strip()
     return val if val else default
 
 
-launch = input("Would you like to launch the Turtle mode? (yes/no): ").strip()
-if launch.lower() == "yes":
-    customize = input("Would you like to customize the turtle? (yes/no): ").strip()
+def customize_turtle_speed():
+    """Customize the turtle speed (0-10)"""
+    try:
+        speed = int(get_user_input("Choose turtle speed (0-10, 0 is fastest)", "5"))
+        return max(0, min(10, speed))
+    except ValueError:
+        print("Invalid input. Using default speed 5.")
+        return 5
 
-    # Defaults
-    color = "blue"
-    shape = "turtle"
-    speed = 3
-    pen_size = 2
-    size = 100
-    draw_shape = "square"
 
-    if customize.lower() == "yes":
-        color = get_input("Choose turtle color", color)
-        shape = get_input("Choose turtle shape (classic, turtle, circle, square)", shape)
-        try:
-            speed = int(get_input("Choose speed (0-10)", str(speed)))
-            speed = max(0, min(10, speed))
-        except ValueError:
-            speed = 3
-        try:
-            pen_size = int(get_input("Pen size (1-10)", str(pen_size)))
-            pen_size = max(1, min(10, pen_size))
-        except ValueError:
-            pen_size = 2
-        try:
-            size = int(get_input("Shape size in pixels", str(size)))
-        except ValueError:
-            size = 100
-        draw_shape = get_input("Choose shape to draw (square, triangle, circle, pentagon, hexagon, star)", draw_shape).lower()
+def customize_turtle_appearance():
+    """Customize how the turtle looks (shape)"""
+    shape = get_user_input("Choose turtle shape (turtle, arrow, circle, square, triangle, classic)", "turtle")
+    return shape
 
-    start = input("Start turtle now? (yes/no): ").strip()
-    if start.lower() == "yes":
-        import turtle
 
-        # Create a screen object
-        screen = turtle.Screen()
-        screen.title("Turtle Graphics")
-        screen.setup(width=800, height=600)
+def customize_turtle_color():
+    """Customize the turtle color"""
+    color = get_user_input("Choose turtle color (e.g., red, blue, green, purple, orange)", "blue")
+    return color
 
-        # Create a turtle object with chosen settings
-        t = turtle.Turtle()
-        try:
-            t.color(color)
-        except Exception:
-            print(f"Warning: '{color}' is not a valid color. Using default color 'blue'.")
-            t.color("blue")  # Fallback to default color if invalid
-        try:
-            t.shape(shape)
-        except Exception:
-            pass
-        t.pensize(pen_size)
-        t.speed(speed)
 
-        # Draw the requested shape
-        if draw_shape == "square":
-            for _ in range(4):
-                t.forward(size)
-                t.right(90)
-        elif draw_shape == "triangle":
-            for _ in range(3):
-                t.forward(size)
-                t.left(120)
-        elif draw_shape == "circle":
-            t.circle(size / 2)
-        elif draw_shape == "pentagon":
-            for _ in range(5):
-                t.forward(size)
-                t.right(72)
-        elif draw_shape == "hexagon":
-            for _ in range(6):
-                t.forward(size)
-                t.right(60)
-        elif draw_shape == "star":
-            for _ in range(5):
-                t.forward(size)
-                t.right(144)
-        else:
-            print(f"Warning: '{draw_shape}' is not a recognized shape. Drawing a square instead.")
-            for _ in range(4):
-                t.forward(size)
-                t.right(90)
+def customize_shape_to_draw():
+    """Customize what shape the turtle will draw"""
+    print("\nAvailable shapes to draw:")
+    print("  - circle")
+    print("  - square")
+    print("  - triangle")
+    print("  - pentagon")
+    print("  - hexagon")
+    print("  - star")
+    shape = get_user_input("Choose a shape to draw", "square").lower()
+    return shape
 
-        # Keep the window open
-        turtle.done()
-        print("Turtle Program completed. Thank you for using Turtle. Goodbye!")
+
+def draw_shape(t, shape_name, size):
+    """Draw the specified shape with the turtle"""
+    if shape_name == "circle":
+        t.circle(size / 2)
+    elif shape_name == "square":
+        for _ in range(4):
+            t.forward(size)
+            t.right(90)
+    elif shape_name == "triangle":
+        for _ in range(3):
+            t.forward(size)
+            t.left(120)
+    elif shape_name == "pentagon":
+        for _ in range(5):
+            t.forward(size)
+            t.right(72)
+    elif shape_name == "hexagon":
+        for _ in range(6):
+            t.forward(size)
+            t.right(60)
+    elif shape_name == "star":
+        for _ in range(5):
+            t.forward(size)
+            t.right(144)
     else:
+        print(f"Warning: '{shape_name}' is not a recognized shape. Drawing a square instead.")
+        for _ in range(4):
+            t.forward(size)
+            t.right(90)
+
+
+def main():
+    """Main function to run the turtle program"""
+    launch = input("Would you like to launch the Turtle mode? (yes/no): ").strip()
+    
+    if launch.lower() != "yes":
+        print("Turtle mode not launched.")
+        return
+    
+    customize = input("Would you like to customize the turtle? (yes/no): ").strip()
+    
+    # Default settings
+    speed = 5
+    shape = "turtle"
+    color = "blue"
+    draw_shape_name = "square"
+    size = 100
+    
+    if customize.lower() == "yes":
+        print("\n--- Turtle Customization ---")
+        speed = customize_turtle_speed()
+        shape = customize_turtle_appearance()
+        color = customize_turtle_color()
+        draw_shape_name = customize_shape_to_draw()
+        
+        try:
+            size = int(get_user_input("Shape size in pixels", "100"))
+        except ValueError:
+            print("Invalid input. Using default size 100.")
+            size = 100
+    
+    start = input("\nStart turtle now? (yes/no): ").strip()
+    
+    if start.lower() != "yes":
         print("Launch cancelled.")
-else:
-    print("Turtle mode not launched.")
+        return
+    
+    # Create a screen object
+    screen = turtle.Screen()
+    screen.title("Turtle Graphics")
+    screen.setup(width=800, height=600)
+    
+    # Create a turtle object with chosen settings
+    t = turtle.Turtle()
+    
+    # Apply speed
+    t.speed(speed)
+    
+    # Apply color
+    try:
+        t.color(color)
+    except Exception:
+        print(f"Warning: '{color}' is not a valid color. Using default color 'blue'.")
+        t.color("blue")
+    
+    # Apply shape
+    try:
+        t.shape(shape)
+    except Exception:
+        print(f"Warning: '{shape}' is not a valid shape. Using default shape 'turtle'.")
+        t.shape("turtle")
+    
+    # Draw the requested shape
+    draw_shape(t, draw_shape_name, size)
+    
+    # Keep the window open
+    turtle.done()
+    print("Turtle Program completed. Thank you for using Turtle. Goodbye!")
+
+
+if __name__ == "__main__":
+    main()
 
