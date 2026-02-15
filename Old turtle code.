@@ -1,4 +1,4 @@
-# This is  an old turtle code that is being kept  as a legacy code.
+# This is  an old turtle code that is being kept  as a legacy code. This code is not to be updated on any terms.
 def get_input(prompt, default):
     val = input(f"{prompt} [{default}]: ").strip()
     return val if val else default
