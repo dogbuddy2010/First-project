@@ -104,13 +104,18 @@ def run_turtle_drawing():
         print("Launch cancelled.")
         return False
     
-    # Create a screen object
-    screen = turtle.Screen()
-    screen.title("Turtle Graphics")
-    screen.setup(width=800, height=600)
-    
-    # Create a turtle object with chosen settings
-    t = turtle.Turtle()
+    try:
+        # Create (or reuse) a screen object
+        screen = turtle.Screen()
+        screen.title("Turtle Graphics")
+        screen.setup(width=800, height=600)
+        screen.clearscreen()
+
+        # Create a turtle object with chosen settings
+        t = turtle.Turtle()
+    except turtle.Terminator:
+        print("Turtle window was closed. Please run the program again.")
+        return False
     
     # Apply speed
     t.speed(speed)
@@ -131,9 +136,6 @@ def run_turtle_drawing():
     
     # Draw the requested shape
     draw_shape(t, draw_shape_name, size)
-    
-    # Close the window to allow for another drawing
-    screen.bye()
     
     return True
 
