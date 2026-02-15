@@ -1,3 +1,4 @@
+#Imports the turtle module to create a turtle graphics program that allows users to customize the turtle's speed, appearance, color, and the shape it will draw. The program also includes error handling for invalid inputs and allows users to draw multiple shapes in a single session.
 import turtle
 
 
@@ -6,7 +7,7 @@ def get_user_input(prompt, default):
     val = input(f"{prompt} [{default}]: ").strip()
     return val if val else default
 
-
+# The turtle Proud customization Feature that allows users to set the turtle's speed, appearance, color, and the shape it will draw. Each customization option includes error handling to ensure valid inputs and defaults to safe values when necessary.   
 def customize_turtle_speed():
     """Customize the turtle speed (0-10)"""
     try:
@@ -71,7 +72,7 @@ def draw_shape(t, shape_name, size):
         draw_shape(t, 'square', size)
 
 
-def run_turtle_drawing():
+def run_turtle_drawing(t):
     """Run the turtle customization and drawing process"""
     customize = input("Would you like to customize the turtle? (yes/no): ").strip()
     
@@ -105,14 +106,11 @@ def run_turtle_drawing():
         return False
     
     try:
-        # Create (or reuse) a screen object
-        screen = turtle.Screen()
-        screen.title("Turtle Graphics")
-        screen.setup(width=800, height=600)
-        screen.clearscreen()
-
-        # Create a turtle object with chosen settings
-        t = turtle.Turtle()
+        t.clear()
+        t.penup()
+        t.home()
+        t.setheading(0)
+        t.pendown()
     except turtle.Terminator:
         print("Turtle window was closed. Please run the program again.")
         return False
@@ -148,10 +146,19 @@ def main():
         print("Turtle mode not launched.")
         return
     
+    try:
+        screen = turtle.Screen()
+        screen.title("Turtle Graphics")
+        screen.setup(width=800, height=600)
+        t = turtle.Turtle()
+    except turtle.Terminator:
+        print("Turtle window was closed. Please run the program again.")
+        return
+
     # Loop to allow multiple drawings
     while True:
         # Run the turtle drawing
-        drawing_completed = run_turtle_drawing()
+        drawing_completed = run_turtle_drawing(t)
         
         if not drawing_completed:
             print("Turtle Program cancelled. Goodbye!")
@@ -165,6 +172,11 @@ def main():
         if draw_again.lower() != "yes":
             print("Thank you for using Turtle. Goodbye!")
             break
+
+    try:
+        screen.bye()
+    except turtle.Terminator:
+        pass
 
 
 if __name__ == "__main__":
