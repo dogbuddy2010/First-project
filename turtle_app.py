@@ -68,9 +68,7 @@ def draw_shape(t, shape_name, size):
             t.right(144)
     else:
         print(f"Warning: '{shape_name}' is not a recognized shape. Drawing a square instead.")
-        for _ in range(4):
-            t.forward(size)
-            t.right(90)
+        draw_shape(t, 'square', size)
 
 
 def main():
