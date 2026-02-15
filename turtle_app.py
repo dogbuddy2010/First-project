@@ -71,14 +71,8 @@ def draw_shape(t, shape_name, size):
         draw_shape(t, 'square', size)
 
 
-def main():
-    """Main function to run the turtle program"""
-    launch = input("Would you like to launch the Turtle mode? (yes/no): ").strip()
-    
-    if launch.lower() != "yes":
-        print("Turtle mode not launched.")
-        return
-    
+def run_turtle_drawing():
+    """Run the turtle customization and drawing process"""
     customize = input("Would you like to customize the turtle? (yes/no): ").strip()
     
     # Default settings
@@ -108,7 +102,7 @@ def main():
     
     if start.lower() != "yes":
         print("Launch cancelled.")
-        return
+        return False
     
     # Create a screen object
     screen = turtle.Screen()
@@ -138,9 +132,37 @@ def main():
     # Draw the requested shape
     draw_shape(t, draw_shape_name, size)
     
-    # Keep the window open
-    turtle.done()
-    print("Turtle Program completed. Thank you for using Turtle. Goodbye!")
+    # Close the window to allow for another drawing
+    screen.bye()
+    
+    return True
+
+
+def main():
+    """Main function to run the turtle program"""
+    launch = input("Would you like to launch the Turtle mode? (yes/no): ").strip()
+    
+    if launch.lower() != "yes":
+        print("Turtle mode not launched.")
+        return
+    
+    # Loop to allow multiple drawings
+    while True:
+        # Run the turtle drawing
+        drawing_completed = run_turtle_drawing()
+        
+        if not drawing_completed:
+            print("Turtle Program cancelled. Goodbye!")
+            break
+        
+        # Ask if user wants to draw again
+        print("\n" + "="*50)
+        draw_again = input("Would you like to draw again? (yes/no): ").strip()
+        print("="*50 + "\n")
+        
+        if draw_again.lower() != "yes":
+            print("Thank you for using Turtle. Goodbye!")
+            break
 
 
 if __name__ == "__main__":
