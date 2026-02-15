@@ -39,6 +39,7 @@ jobs:
         id: flake8
         continue-on-error: true
         run: |
+          set -o pipefail
           echo "## Flake8 Results" >> $GITHUB_STEP_SUMMARY
           flake8 "turtle_app.py" --count --show-source --statistics --extend-ignore=E501 2>&1 | tee -a $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
@@ -47,6 +48,7 @@ jobs:
         id: pylint
         continue-on-error: true
         run: |
+          set -o pipefail
           echo "## Pylint Results" >> $GITHUB_STEP_SUMMARY
           pylint "turtle_app.py" --fail-under=7.0 --disable=C0114,C0116 2>&1 | tee -a $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
@@ -55,6 +57,7 @@ jobs:
         id: bandit
         continue-on-error: true
         run: |
+          set -o pipefail
           echo "## Bandit Security Scan Results" >> $GITHUB_STEP_SUMMARY
           bandit "turtle_app.py" 2>&1 | tee -a $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
