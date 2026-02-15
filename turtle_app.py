@@ -1,4 +1,4 @@
-#Imports the turtle module to create a turtle graphics program that allows users to customize the turtle's speed, appearance, color, and the shape it will draw. The program also includes error handling for invalid inputs and allows users to draw multiple shapes in a single session.
+# The import turtle is the first step to running the turtle code.
 import turtle
 
 
