@@ -37,39 +37,70 @@ jobs:
       
       - name: Run Flake8 (Style & Error Check)
         id: flake8
-        continue-on-error: true
         run: |
           set -o pipefail
           echo "## Flake8 Results" >> $GITHUB_STEP_SUMMARY
           flake8 "turtle_app.py" --count --show-source --statistics --extend-ignore=E501 2>&1 | tee -a $GITHUB_STEP_SUMMARY
+          status=${PIPESTATUS[0]}
+          echo "exit_code=$status" >> $GITHUB_OUTPUT
+          if [ "$status" -eq 0 ]; then
+            echo "✅ Flake8 passed" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ Flake8 found issues" >> $GITHUB_STEP_SUMMARY
+          fi
           echo "" >> $GITHUB_STEP_SUMMARY
+          exit 0
       
       - name: Run Pylint (Code Quality Check)
         id: pylint
-        continue-on-error: true
         run: |
           set -o pipefail
           echo "## Pylint Results" >> $GITHUB_STEP_SUMMARY
           pylint "turtle_app.py" --fail-under=7.0 --disable=C0114,C0116 2>&1 | tee -a $GITHUB_STEP_SUMMARY
+          status=${PIPESTATUS[0]}
+          echo "exit_code=$status" >> $GITHUB_OUTPUT
+          if [ "$status" -eq 0 ]; then
+            echo "✅ Pylint passed" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ Pylint found issues" >> $GITHUB_STEP_SUMMARY
+          fi
           echo "" >> $GITHUB_STEP_SUMMARY
+          exit 0
       
       - name: Run Bandit (Security Check)
         id: bandit
-        continue-on-error: true
         run: |
           set -o pipefail
           echo "## Bandit Security Scan Results" >> $GITHUB_STEP_SUMMARY
           bandit "turtle_app.py" 2>&1 | tee -a $GITHUB_STEP_SUMMARY
+          status=${PIPESTATUS[0]}
+          echo "exit_code=$status" >> $GITHUB_OUTPUT
+          if [ "$status" -eq 0 ]; then
+            echo "✅ Bandit passed" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ Bandit found issues" >> $GITHUB_STEP_SUMMARY
+          fi
           echo "" >> $GITHUB_STEP_SUMMARY
+          exit 0
       
       - name: Python Syntax Check
+        id: syntax
+        continue-on-error: true
         run: |
+          set -o pipefail
           echo "## Syntax Check Results" >> $GITHUB_STEP_SUMMARY
-          python -m py_compile "turtle_app.py"
-          echo "✅ No syntax errors found" >> $GITHUB_STEP_SUMMARY
+          python -m py_compile "turtle_app.py" 2>&1 | tee -a $GITHUB_STEP_SUMMARY
+          status=${PIPESTATUS[0]}
+          echo "exit_code=$status" >> $GITHUB_OUTPUT
+          if [ "$status" -eq 0 ]; then
+            echo "✅ No syntax errors found" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ Syntax errors found" >> $GITHUB_STEP_SUMMARY
+          fi
+          exit 0
       
       - name: Create Issue if Bugs Found
-        if: steps.flake8.outcome == 'failure' || steps.pylint.outcome == 'failure' || steps.bandit.outcome == 'failure'
+        if: always() && (steps.flake8.outputs.exit_code != '0' || steps.pylint.outputs.exit_code != '0' || steps.bandit.outputs.exit_code != '0' || steps.syntax.outputs.exit_code != '0')
         uses: actions/github-script@v7
         with:
           script: |
@@ -82,9 +113,10 @@ jobs:
             ${context.payload.repository.html_url}/actions/runs/${context.runId}
             
             ### Scan Results:
-            - Flake8 (Style/Errors): ${{ steps.flake8.outcome }}
-            - Pylint (Code Quality): ${{ steps.pylint.outcome }}
-            - Bandit (Security): ${{ steps.bandit.outcome }}
+            - Flake8 (Style/Errors): exit code ${{ steps.flake8.outputs.exit_code }}
+            - Pylint (Code Quality): exit code ${{ steps.pylint.outputs.exit_code }}
+            - Bandit (Security): exit code ${{ steps.bandit.outputs.exit_code }}
+            - Syntax Check: exit code ${{ steps.syntax.outputs.exit_code }}
             
             ---
             *This issue was automatically created by the daily bug scanning workflow.*`;
@@ -121,6 +153,6 @@ jobs:
             }
       
       - name: Report Success
-        if: steps.flake8.outcome == 'success' && steps.pylint.outcome == 'success' && steps.bandit.outcome == 'success'
+        if: always() && steps.flake8.outputs.exit_code == '0' && steps.pylint.outputs.exit_code == '0' && steps.bandit.outputs.exit_code == '0' && steps.syntax.outputs.exit_code == '0'
         run: |
           echo "✅ All bug scans passed! No issues found." >> $GITHUB_STEP_SUMMARY
