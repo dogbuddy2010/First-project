@@ -97,6 +97,9 @@ def main():
         
         try:
             size = int(get_user_input("Shape size in pixels", "100"))
+            if size <= 0:
+                print("Size must be positive. Using default size 100.")
+                size = 100
         except ValueError:
             print("Invalid input. Using default size 100.")
             size = 100
