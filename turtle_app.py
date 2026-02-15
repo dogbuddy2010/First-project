@@ -1,4 +1,4 @@
-# The import turtle is the first step to running the turtle code.
+# Import turtle to run the graphics program.
 import turtle
 
 
@@ -7,7 +7,12 @@ def get_user_input(prompt, default):
     val = input(f"{prompt} [{default}]: ").strip()
     return val if val else default
 
-# The turtle Proud customization Feature that allows users to set the turtle's speed, appearance, color, and the shape it will draw. Each customization option includes error handling to ensure valid inputs and defaults to safe values when necessary.   
+def is_yes(value):
+    """Return True when user enters a yes-like response."""
+    return value.strip().lower() in {"y", "yes"}
+
+
+# Turtle customization allows users to set speed, appearance, color, and shape.
 def customize_turtle_speed():
     """Customize the turtle speed (0-10)"""
     try:
@@ -83,7 +88,7 @@ def run_turtle_drawing(t):
     draw_shape_name = "square"
     size = 100
     
-    if customize.lower() == "yes":
+    if is_yes(customize):
         print("\n--- Turtle Customization ---")
         speed = customize_turtle_speed()
         shape = customize_turtle_appearance()
@@ -101,7 +106,7 @@ def run_turtle_drawing(t):
     
     start = input("\nStart turtle now? (yes/no): ").strip()
     
-    if start.lower() != "yes":
+    if not is_yes(start):
         print("Launch cancelled.")
         return False
     
@@ -142,7 +147,7 @@ def main():
     """Main function to run the turtle program"""
     launch = input("Would you like to launch the Turtle mode? (yes/no): ").strip()
     
-    if launch.lower() != "yes":
+    if not is_yes(launch):
         print("Turtle mode not launched.")
         return
     
@@ -169,7 +174,7 @@ def main():
         draw_again = input("Would you like to draw again? (yes/no): ").strip()
         print("="*50 + "\n")
         
-        if draw_again.lower() != "yes":
+        if not is_yes(draw_again):
             print("Thank you for using Turtle. Goodbye!")
             break
 
