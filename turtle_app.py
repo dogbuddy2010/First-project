@@ -190,8 +190,6 @@ def main():
         return
 
     try:
-        drew_anything = False
-
         # Loop to allow multiple drawings
         while True:
             # Run the turtle drawing
@@ -200,8 +198,6 @@ def main():
             if not drawing_completed:
                 print("Turtle session ended.")
                 break
-
-            drew_anything = True
             
             # Ask if user wants to draw again
             print("\n" + "="*50)
@@ -212,16 +208,10 @@ def main():
                 print("Thank you for using Turtle. Goodbye!")
                 break
 
-        if drew_anything:
-            try:
-                screen.mainloop()
-            except turtle.Terminator:
-                pass
-        else:
-            try:
-                screen.bye()
-            except turtle.Terminator:
-                pass
+        try:
+            turtle.done()
+        except turtle.Terminator:
+            pass
     except StopProgram:
         print("Stop! detected. Exiting program.")
         if screen is not None:
