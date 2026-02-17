@@ -50,7 +50,9 @@ def get_yes_no_input(prompt):
 # Turtle customization allows users to set speed, appearance, color, and shape.
 def customize_turtle_speed():
     """Customize the turtle speed (0-10)"""
-    speed, used_default = get_bounded_int("Choose turtle speed (0-10, 0 is fastest)", 5, minimum=0, maximum=10)
+    speed, used_default = get_bounded_int(
+        "Choose turtle speed (0-10, 0 is fastest)", 5, minimum=0, maximum=10
+    )
     if used_default:
         print("Invalid input. Using default speed 5.")
     return speed
@@ -122,14 +124,14 @@ def draw_shape(t, shape_name, size):
 def run_turtle_drawing(t):
     """Run the turtle customization and drawing process"""
     customize = get_yes_no_input("Would you like to customize the turtle?")
-    
+
     # Default settings
     speed = 5
     shape = "turtle"
     color = "blue"
     draw_shape_name = "square"
     size = 100
-    
+
     if customize:
         print("\n--- Turtle Customization ---")
         speed = customize_turtle_speed()
@@ -140,7 +142,7 @@ def run_turtle_drawing(t):
         size, used_default = get_bounded_int("Shape size in pixels", 100, minimum=1)
         if used_default:
             print("Invalid input. Using default size 100.")
-    
+
     try:
         t.clear()
         t.penup()
@@ -150,22 +152,22 @@ def run_turtle_drawing(t):
     except turtle.Terminator:
         print("Turtle window was closed. Please run the program again.")
         return False
-    
+
     # Apply speed
     t.speed(speed)
-    
+
     # Apply color
     try:
         t.color(color)
-    except Exception:
+    except (turtle.TurtleGraphicsError, ValueError):
         print(f"Warning: '{color}' is not a valid color. Using default color 'blue'.")
         t.color("blue")
-    
+
     t.shape(shape)
-    
+
     # Draw the requested shape
     draw_shape(t, draw_shape_name, size)
-    
+
     return True
 
 
@@ -194,11 +196,11 @@ def main():
         while True:
             # Run the turtle drawing
             drawing_completed = run_turtle_drawing(t)
-            
+
             if not drawing_completed:
                 print("Turtle session ended.")
                 break
-            
+
             # Ask if user wants to draw again
             print("\n" + "="*50)
             draw_again = get_yes_no_input("Would you like to draw again?")
@@ -223,4 +225,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
