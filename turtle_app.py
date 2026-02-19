@@ -1,9 +1,10 @@
 # Import turtle to run the graphics program.
+import random
 import turtle
 
 
 VALID_TURTLE_SHAPES = {"turtle", "arrow", "circle", "square", "triangle", "classic"}
-VALID_DRAW_SHAPES = {"circle", "square", "triangle", "pentagon", "hexagon", "star"}
+VALID_DRAW_SHAPES = {"circle", "square", "triangle", "pentagon", "hexagon", "star", "random"}
 
 
 class StopProgram(Exception):
@@ -85,11 +86,48 @@ def customize_shape_to_draw():
     print("  - pentagon")
     print("  - hexagon")
     print("  - star")
+    print("  - random")
     shape = get_user_input("Choose a shape to draw", "square").lower()
     if shape not in VALID_DRAW_SHAPES:
         print(f"Warning: '{shape}' is not a recognized shape. Drawing a square instead.")
         return "square"
     return shape
+
+
+def draw_random_art(t):
+    """Draw a random composition using multiple shapes, colors, and positions."""
+    random_shapes = ["circle", "square", "triangle", "pentagon", "hexagon", "star"]
+    random_colors = [
+        "red",
+        "blue",
+        "green",
+        "purple",
+        "orange",
+        "gold",
+        "magenta",
+        "cyan",
+        "black",
+    ]
+
+    for _ in range(12):
+        shape_name = random.choice(random_shapes)
+        size = random.randint(30, 120)
+        x = random.randint(-300, 300)
+        y = random.randint(-220, 220)
+        heading = random.randint(0, 359)
+        color = random.choice(random_colors)
+
+        t.penup()
+        t.goto(x, y)
+        t.setheading(heading)
+        t.pendown()
+
+        try:
+            t.color(color)
+        except (turtle.TurtleGraphicsError, ValueError):
+            t.color("blue")
+
+        draw_shape(t, shape_name, size)
 
 
 def draw_shape(t, shape_name, size):
@@ -166,7 +204,10 @@ def run_turtle_drawing(t):
     t.shape(shape)
 
     # Draw the requested shape
-    draw_shape(t, draw_shape_name, size)
+    if draw_shape_name == "random":
+        draw_random_art(t)
+    else:
+        draw_shape(t, draw_shape_name, size)
 
     return True
 
