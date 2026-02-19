@@ -1,10 +1,27 @@
+"""Interactive turtle drawing app with customizable and random modes."""
+
 # Import turtle to run the graphics program.
-import random
+import secrets
 import turtle
 
 
-VALID_TURTLE_SHAPES = {"turtle", "arrow", "circle", "square", "triangle", "classic"}
-VALID_DRAW_SHAPES = {"circle", "square", "triangle", "pentagon", "hexagon", "star", "random"}
+VALID_TURTLE_SHAPES = {
+    "turtle",
+    "arrow",
+    "circle",
+    "square",
+    "triangle",
+    "classic",
+}
+VALID_DRAW_SHAPES = {
+    "circle",
+    "square",
+    "triangle",
+    "pentagon",
+    "hexagon",
+    "star",
+    "random",
+}
 
 
 class StopProgram(Exception):
@@ -62,18 +79,27 @@ def customize_turtle_speed():
 def customize_turtle_appearance():
     """Customize how the turtle looks (shape)"""
     shape = get_user_input(
-        "Choose turtle shape (turtle, arrow, circle, square, triangle, classic)",
+        (
+            "Choose turtle shape "
+            "(turtle, arrow, circle, square, triangle, classic)"
+        ),
         "turtle",
     ).lower()
     if shape not in VALID_TURTLE_SHAPES:
-        print(f"Warning: '{shape}' is not a valid shape. Using default shape 'turtle'.")
+        print(
+            f"Warning: '{shape}' is not a valid shape. "
+            "Using default shape 'turtle'."
+        )
         return "turtle"
     return shape
 
 
 def customize_turtle_color():
     """Customize the turtle color"""
-    color = get_user_input("Choose turtle color (e.g., red, blue, green, purple, orange)", "blue")
+    color = get_user_input(
+        "Choose turtle color (e.g., red, blue, green, purple, orange)",
+        "blue",
+    )
     return color
 
 
@@ -89,14 +115,25 @@ def customize_shape_to_draw():
     print("  - random")
     shape = get_user_input("Choose a shape to draw", "square").lower()
     if shape not in VALID_DRAW_SHAPES:
-        print(f"Warning: '{shape}' is not a recognized shape. Drawing a square instead.")
+        print(
+            f"Warning: '{shape}' is not a recognized shape. "
+            "Drawing a square instead."
+        )
         return "square"
     return shape
 
 
 def draw_random_art(t):
-    """Draw a random composition using multiple shapes, colors, and positions."""
-    random_shapes = ["circle", "square", "triangle", "pentagon", "hexagon", "star"]
+    """Draw a random composition with varied shapes, colors, and positions."""
+    rng = secrets.SystemRandom()
+    random_shapes = [
+        "circle",
+        "square",
+        "triangle",
+        "pentagon",
+        "hexagon",
+        "star",
+    ]
     random_colors = [
         "red",
         "blue",
@@ -110,12 +147,12 @@ def draw_random_art(t):
     ]
 
     for _ in range(12):
-        shape_name = random.choice(random_shapes)
-        size = random.randint(30, 120)
-        x = random.randint(-300, 300)
-        y = random.randint(-220, 220)
-        heading = random.randint(0, 359)
-        color = random.choice(random_colors)
+        shape_name = rng.choice(random_shapes)
+        size = rng.randint(30, 120)
+        x = rng.randint(-300, 300)
+        y = rng.randint(-220, 220)
+        heading = rng.randint(0, 359)
+        color = rng.choice(random_colors)
 
         t.penup()
         t.goto(x, y)
@@ -155,8 +192,11 @@ def draw_shape(t, shape_name, size):
             t.forward(size)
             t.right(144)
     else:
-        print(f"Warning: '{shape_name}' is not a recognized shape. Drawing a square instead.")
-        draw_shape(t, 'square', size)
+        print(
+            f"Warning: '{shape_name}' is not a recognized shape. "
+            "Drawing a square instead."
+        )
+        draw_shape(t, "square", size)
 
 
 def run_turtle_drawing(t):
@@ -177,7 +217,9 @@ def run_turtle_drawing(t):
         color = customize_turtle_color()
         draw_shape_name = customize_shape_to_draw()
 
-        size, used_default = get_bounded_int("Shape size in pixels", 100, minimum=1)
+        size, used_default = get_bounded_int(
+            "Shape size in pixels", 100, minimum=1
+        )
         if used_default:
             print("Invalid input. Using default size 100.")
 
@@ -198,7 +240,10 @@ def run_turtle_drawing(t):
     try:
         t.color(color)
     except (turtle.TurtleGraphicsError, ValueError):
-        print(f"Warning: '{color}' is not a valid color. Using default color 'blue'.")
+        print(
+            f"Warning: '{color}' is not a valid color. "
+            "Using default color 'blue'."
+        )
         t.color("blue")
 
     t.shape(shape)
