@@ -301,7 +301,7 @@ def main():
         except turtle.Terminator:
             pass
     except StopProgram:
-        print("Stop! detected. Exiting program.")
+        print("Stop! detected. Exiting program. Please start again if you want to use Turtle.")
         if screen is not None:
             try:
                 screen.bye()
