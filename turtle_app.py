@@ -20,6 +20,8 @@ VALID_DRAW_SHAPES = {
     "pentagon",
     "hexagon",
     "star",
+    "potato",
+    "poato",
     "random",
 }
 
@@ -112,6 +114,7 @@ def customize_shape_to_draw():
     print("  - pentagon")
     print("  - hexagon")
     print("  - star")
+    print("  - potato")
     print("  - random")
     shape = get_user_input("Choose a shape to draw", "square").lower()
     if shape not in VALID_DRAW_SHAPES:
@@ -133,6 +136,7 @@ def draw_random_art(t):
         "pentagon",
         "hexagon",
         "star",
+        "potato",
     ]
     random_colors = [
         "red",
@@ -167,6 +171,36 @@ def draw_random_art(t):
         draw_shape(t, shape_name, size)
 
 
+def draw_potato(t, size):
+    """Draw a potato-like organic shape."""
+    segments = [
+        (35, 0.40),
+        (28, 0.48),
+        (42, 0.36),
+        (25, 0.50),
+        (50, 0.34),
+        (30, 0.46),
+        (45, 0.38),
+        (25, 0.47),
+        (40, 0.41),
+        (40, 0.39),
+    ]
+
+    previous_pen_color = t.pencolor()
+    previous_fill_color = t.fillcolor()
+    t.pencolor("peru")
+    t.fillcolor("saddlebrown")
+
+    t.begin_fill()
+    for turn_angle, segment_multiplier in segments:
+        t.forward(size * segment_multiplier)
+        t.right(turn_angle)
+    t.end_fill()
+
+    t.pencolor(previous_pen_color)
+    t.fillcolor(previous_fill_color)
+
+
 def draw_shape(t, shape_name, size):
     """Draw the specified shape with the turtle"""
     if shape_name == "circle":
@@ -191,6 +225,8 @@ def draw_shape(t, shape_name, size):
         for _ in range(5):
             t.forward(size)
             t.right(144)
+    elif shape_name in {"potato", "poato"}:
+        draw_potato(t, size)
     else:
         print(
             f"Warning: '{shape_name}' is not a recognized shape. "
@@ -222,6 +258,9 @@ def run_turtle_drawing(t):
         )
         if used_default:
             print("Invalid input. Using default size 100.")
+
+    if draw_shape_name in {"potato", "poato"} and color == "blue":
+        color = "saddlebrown"
 
     try:
         t.clear()
