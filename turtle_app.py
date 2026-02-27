@@ -16,6 +16,9 @@ VALID_TURTLE_SHAPES = {
 VALID_DRAW_SHAPES = {
     "circle",
     "square",
+    "3d square",
+    "3d_square",
+    "3dsquare",
     "triangle",
     "pentagon",
     "hexagon",
@@ -110,6 +113,7 @@ def customize_shape_to_draw():
     print("\nAvailable shapes to draw:")
     print("  - circle")
     print("  - square")
+    print("  - 3d square")
     print("  - triangle")
     print("  - pentagon")
     print("  - hexagon")
@@ -201,6 +205,48 @@ def draw_potato(t, size):
     t.fillcolor(previous_fill_color)
 
 
+def draw_3d_square(t, size):
+    """Draw a simple 3D square (cube face illusion)."""
+    offset = size * 0.35
+
+    # Front square
+    for _ in range(4):
+        t.forward(size)
+        t.right(90)
+
+    # Back square
+    t.penup()
+    t.goto(t.xcor() + offset, t.ycor() + offset)
+    t.pendown()
+    for _ in range(4):
+        t.forward(size)
+        t.right(90)
+
+    # Connecting edges
+    front_top_left = (t.xcor() - offset, t.ycor() - offset)
+    back_top_left = (t.xcor(), t.ycor())
+
+    t.penup()
+    t.goto(front_top_left)
+    t.pendown()
+    t.goto(back_top_left)
+
+    t.penup()
+    t.goto(front_top_left[0] + size, front_top_left[1])
+    t.pendown()
+    t.goto(back_top_left[0] + size, back_top_left[1])
+
+    t.penup()
+    t.goto(front_top_left[0], front_top_left[1] - size)
+    t.pendown()
+    t.goto(back_top_left[0], back_top_left[1] - size)
+
+    t.penup()
+    t.goto(front_top_left[0] + size, front_top_left[1] - size)
+    t.pendown()
+    t.goto(back_top_left[0] + size, back_top_left[1] - size)
+
+
 def draw_shape(t, shape_name, size):
     """Draw the specified shape with the turtle"""
     if shape_name == "circle":
@@ -209,6 +255,8 @@ def draw_shape(t, shape_name, size):
         for _ in range(4):
             t.forward(size)
             t.right(90)
+    elif shape_name in {"3d square", "3d_square", "3dsquare"}:
+        draw_3d_square(t, size)
     elif shape_name == "triangle":
         for _ in range(3):
             t.forward(size)
